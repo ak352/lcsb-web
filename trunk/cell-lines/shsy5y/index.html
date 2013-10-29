@@ -2,11 +2,25 @@
  
 <html lang="en">
 <head>
+  <link rel="shortcut icon" href="images/shsy5y_logo.jpg" />
   <meta charset="utf-8" />
-  <title>SHSY5Y Sequencing</title>
+  <title>SH-SY5Y Sequencing</title>
   <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+  <style type="text/css" title="currentStyle">
+        @import "lib/css/demo_page.css";
+	@import "lib/css/demo_table.css";
+  </style>
   <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
   <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  <link rel="stylesheet" type="text/css" href="lib/js/bootstrap.css" media="all">
+        <script type="text/javascript" src="lib/js/bootstrap.js"></script>
+      <!--  <script type="text/javascript" src="lib/js/typeahead.js"></script> -->
+        <script type="text/javascript" src="lib/js/jquery.dataTables.js"></script>
+        <script type="text/javascript" src="lib/js/highcharts.js"></script>
+        <script type="text/javascript" src="lib/js/exporting.js"></script>
+        <link rel="stylesheet" href="lib/js/messi.min.css" />
+        <script src="lib/js/messi.js"></script>
+
   <script src="js/interaction.js"></script>
   <link rel="stylesheet" href="/css/style.css" />
   <STYLE type="text/css">
@@ -19,12 +33,19 @@
         }
         .header {
         	width:100%;
-		height: 130px;
-		padding-top:2cm;
-		padding: 10px;
+		height: 100px;
+		padding: 5px;
 		background-size: cover;
 		background-color: blue;
-         }
+	      }
+	      .footer1 {
+	                  width:100%;
+		                  height: 70px;
+			                padding-top:2cm;
+			                      padding: 10px;
+			                      background-size: cover;
+			                background-color: blue;
+		                }			
   </STYLE>
 
   <script>
@@ -55,6 +76,15 @@
 	if (mindex == 3){
                 initSTV();
         }
+        if (mindex == 4){
+                initRNASeq();
+        }
+	if (mindex == 5){
+                initMicroarray();
+        }
+	if (mindex == 6){
+                initProtein();
+        }
 	if (mindex == 7){
 		initMetabolomics();
 	}
@@ -74,12 +104,12 @@
 <body>
  
 <div id="header">
-&nbsp; &nbsp;<a href="http://www.uni.lu" target="_blank"><img src="images/unilulogo.jpg" border="1" width=40 height=40 style="padding:10px;"></img></a> &nbsp;&nbsp;<a href="http://lcsb.uni.lu" target="_blank"><img src="images/lcsblogo.jpg" border="1" width=40 height=40 style="padding:10px;"></img></a>&nbsp; &nbsp;
-<font size="+4"><b>SHSY-5S Sequencing Project</b></font>
+&nbsp; &nbsp;<a href="http://www.uni.lu" target="_blank"><img src="images/unilulogo.jpg" border="0" width=45 height=45 style="padding:10px;"></img></a> &nbsp;&nbsp;<a href="http://lcsb.uni.lu" target="_blank"><img src="images/lcsblogo.jpg" border="0" width=45 height=45 style="padding:10px;"></img></a>&nbsp; &nbsp;
+<font size="+3"><b>SH-SY5Y Sequencing Project</b></font>
 </div>
 <div id="tabs">
   <ul>
-    <li><a href="#summary">Project Summary</a></li>
+    <li><a href="#summary">Summary</a></li>
     <li><a href="#SNP">SNP Indel</a></li>
     <li><a href="#CNV">Copy Number</a></li>
     <li><a href="#STV">Structural Variation</a></li>
@@ -89,11 +119,12 @@
     <li><a href="#Metabolite">Metabolomics</a></li>
   </ul>
   <div id="summary">
-   <div>Abstract: ...<br><br>
-   <a href="images/figure1.png" target="_blank"><img src="images/figure1.png" alt="circos" height="400" width="400"></a> <br>Figure 1: description ...
-   <br><br>
-   <a href="images/figure2.png" target="_blank"><img src="images/figure2.png" alt="chromosomes" height="400" width="600"></a> <br>Figure 2: description ...
-   </div>
+   <div>Abstract and short project motivation: ...<br><br>
+     <table><tr><td><a href="images/figure1.png" target="_blank"><img src="images/figure1.png" alt="circos" height="400" width="400"></a></td> 
+	 <td><a href="images/figure2.png" target="_blank"><img src="images/figure2.png" alt="chromosomes" height="400" width="600"></a></td></tr><tr> <td>Figure 1: description ...
+   </td><td>Figure 2: description ...</td></tr></table>
+    <br>Summary of results ...
+    </div>
   </div>
   <div id="SNP">
   </div>
@@ -102,19 +133,19 @@
   <div id="STV">
   </div>
   <div id="RNASeq">
-    <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
   </div>
-  <div id="Geo">
-    <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
+  <div id="Microarray">
   </div>
   <div id="Protein">
-    <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
   </div>
   <div id="Metabolite">
-    <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
   </div>
 </div>
- 
+<div id="footer1" align="right" style="background-color:lightgray">
+  &nbsp; &nbsp;<a href="mailto:pmay35@googlemail.com">Contact</a> 
+ &nbsp; &nbsp;<a href="#">Citation</a>
+  &nbsp; &nbsp;<a href="http://lcsb-web.googlecode.com" target="_blank">Source Code</a>&nbsp; &nbsp;
+</div> 
  
 </body>
 </html>
