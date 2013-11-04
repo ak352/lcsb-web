@@ -81,6 +81,8 @@
         }
 	if (mindex == 5){
                 initMicroarray();
+	}else{
+		resetMicroarray();
         }
 	if (mindex == 6){
                 initProtein();
@@ -121,16 +123,30 @@
   <div id="summary">
    <div>Abstract and short project motivation: ...<br><br>
      <table><tr><td><a href="images/figure1.png" target="_blank"><img src="images/figure1.png" alt="circos" height="400" width="400"></a></td> 
-	 <td><a href="images/figure2.png" target="_blank"><img src="images/figure2.png" alt="chromosomes" height="400" width="600"></a></td></tr><tr> <td>Figure 1: description ...
-   </td><td>Figure 2: description ...</td></tr></table>
-    <br>Summary of results ...
-    </div>
+	 <td><a href="images/figure2.png" target="_blank"><img src="images/figure2.png" alt="chromosomes" height="400" width="600"></a></td></tr><tr> <td>Figure 1: Structural variation
+   </td><td>Figure 2: Copy number gains (red) and losses (blue)</td></tr></table>
+   <br>Download results
+   <br><ul>
+     <li><a href="data/raw/SNP.gz">SNP (gz)</a></li>
+     <li><a href="data/raw/CNV.tsv">CNV</a></li>
+     <li><a href="data/raw/STV.tsv">STV</a></li>
+     <li><a href="data/raw/RNASeq.gz">RNASeq (gz)</a></li>
+     <li><a href="data/raw/microarray_gse9169.gz">Microarray GSE9169 (gz)</a></li>
+     <li><a href="data/raw/microarray_shsy5y.gz">Microarray SH-SY5Y (gz)</a></li>
+     <li><a href="data/raw/Protein.tsv">Protein</a></li>
+     <li><a href="data/raw/Metabolomics.tsv">Metabolomics</a></li>
+     <li><a href="data/raw/shsy5y.short_variants.fa.gz">Fasta (gz)</a>&nbsp;<a href="data/raw/shsy5y.short_variants.fa.fai">index</a></li>
+    </ul>
+       </div>
   </div>
   <div id="SNP">
   </div>
   <div id="CNV">
   </div>
   <div id="STV">
+    <span id="freqspan"><a href="data/raw/STV.tsv">Download SV data</a><br>Frequency Range:</span>
+    <div id="slider-range"></div>
+    <span id="stvdialog"></span>
   </div>
   <div id="RNASeq">
   </div>
