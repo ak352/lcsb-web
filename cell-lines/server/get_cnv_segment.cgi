@@ -20,7 +20,7 @@ try:
     con = lite.connect('sqlite/snv_indel_shsy.db')
     con.text_factory = str
     cur = con.cursor()
-    cur.execute('select chr, begin, end, avg_normalized_cvg, relative_cvg, called_level, level_score from cnv_segments order by avg_normalized_cvg asc')
+    cur.execute('select chr, begin, end, name, avg_normalized_cvg, relative_cvg, called_level, level_score from cnv_segments order by avg_normalized_cvg asc')
     rows = cur.fetchall()
     print "Content-type: text/html;charset=utf-8\r\n"
     pa = {}

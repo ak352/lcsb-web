@@ -16,7 +16,7 @@ try:
     con = lite.connect('sqlite/snv_indel_shsy.db')
     con.text_factory = str
     cur = con.cursor()
-    cur.execute('select id, alias, abundance from protein')
+    cur.execute('select id, name, alias, abundance from protein')
     rows = cur.fetchall()
     print "Content-type: text/html;charset=utf-8\r\n"
     pa = {}

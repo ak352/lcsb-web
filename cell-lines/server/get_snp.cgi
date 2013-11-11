@@ -8,8 +8,8 @@ import urllib
 
 qform = cgi.FieldStorage()
 parameter = "reference = %27GC%27 AND chromosome = %27chr1%27"#qform.getvalue('parameter')
-parameter = "allele_Seq%20%3D%20%27T%27%20or%20allele_Seq%20%3D%20%27A%27"
-function = "advanced"
+parameter = "PINK1" #"allele_Seq%20%3D%20%27T%27%20or%20allele_Seq%20%3D%20%27A%27"
+function = "name"
 parameter = qform.getvalue('parameter')
 function = qform.getvalue('column')
 
@@ -24,13 +24,19 @@ try:
     con = lite.connect('sqlite/snv_indel_shsy.db')
     con.text_factory = str
     cur = con.cursor()
-    fields = 'chromosome, begin, end, var_type, reference, allele_seq, complete_genomics, illumina, xref'
+    fields = 'chromosome, begin, end, name, var_type, reference, allele_seq, complete_genomics, illumina, xref'
     #chromosome text, begin integer, end integer, var_type text, reference text, allele_seq text, xref text, complete_genomics text, illumina text, passed text
     sql = 'select ' + fields + ' from snv_indel_shsy limit 500'
     #p_query = "select * from mytable where name_field = ?";
     #mDb.rawQuery(p_query, new String[] { uvalue });
+    op = "like"
+    if (function == "name"):
+        op = "="
     if (parameter != None):
-      sql = "select " + fields + " from snv_indel_shsy where %s like '%s%s%s' limit 500" %(function, "%",parameter,"%")
+      uparameter = parameter
+      if (function != "name"):	
+          uparameter = "%"+parameter+"%"
+      sql = "select " + fields + " from snv_indel_shsy where %s %s '%s' limit 500" %(function, op, uparameter)
       if (function != None and function == "advanced"):
 	  mywhere = urllib.unquote(parameter)
 	  """andtokens = []
@@ -77,13 +83,32 @@ try:
     print "Content-type: text/html;charset=utf-8\r\n"
     pa = {}
     pa['aaData'] = []
+    #browser.1000genomes.org/Homo_sapiens/Location/View?db=core;h=2;r=3:85378055-85388054
     for row in rows:
         pi = []
         for r in range(len(row)):
-            pi.append(row[r])
+	    if (r == len(row)-1):
+	        xref = '<a href="http://browser.1000genomes.org/Homo_sapiens/Location/View?db=core;h=2;r=%s:%s-%s" target="_blank"><SPAN TITLE="View variant position in 1000 Genomes">1000 Genomes</SPAN></a>' %(row[0].replace("chr", ""),row[1], row[2])
+		stk = row[r]
+		if (stk!= None and stk.find("dbsnp") != -1):
+		    dbsnps = []
+		    #http://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?type=rs&rs=rs2691305
+		    dtk = stk.split(";")
+		    mc = 0
+		    for d in dtk:
+		        if (mc%2 != 0):
+			    rs = d.split("rs")[1]
+			    dbsnps.append('&nbsp;<a href="http://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?type=rs&rs=rs%s" target="_blank">%s</a>' %(rs, d))
+		        mc += 1	
+		    snpstr = " ".join(dbsnps)
+		    xref = xref + snpstr
+		    pi.append(xref)
+		else:
+		    pi.append(xref)
+	    else:	
+                pi.append(row[r])
         pa['aaData'].append(pi)
     print json.dumps(pa)
-    #print sql
 except lite.Error, e:
     print "Error %s:" % e.args[0]
     sys.exit(1)

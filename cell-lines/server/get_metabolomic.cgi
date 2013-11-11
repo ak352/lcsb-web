@@ -28,7 +28,10 @@ try:
     for row in rows:
         pi = []
         for r in range(len(row)):
-            pi.append(row[r])
+	    if (r == 1):
+	      pi.append("<a href='http://www.genome.jp/dbget-bin/www_bget?cpd:%s' target='_blank'>%s</a>" %(row[1], row[1]))
+	    else:
+	      pi.append(row[r])
 	    if (r == len(row)-1):
 	      pi.append("<a href='http://www.genome.jp/dbget-bin/www_bget?cpd:%s' target='_blank'><img src='http://www.genome.jp/Fig/compound/%s.gif'/></a>" %(row[1], row[1]))		
         pa['aaData'].append(pi)
