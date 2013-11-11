@@ -4,9 +4,14 @@ import cgi
 import sqlite3 as lite
 import datetime
 import sys
+import urllib
 
 qform = cgi.FieldStorage()
+parameter = "reference = %27GC%27 AND chromosome = %27chr1%27"#qform.getvalue('parameter')
+parameter = "fpkm%20%3E%20100"
+function = "advanced"
 parameter = qform.getvalue('parameter')
+seqsource = qform.getvalue('seqsource')
 conn = None
 
 try:
@@ -14,16 +19,19 @@ try:
     #conn = sqlite3.connect('./sqlite/' + organism + '_ref.db')
     #conn.text_factory = str
     #c = conn.cursor()
-    con = lite.connect('sqlite/snv_indel_shsy.db')
+    con = lite.connect('sqlite/seq_shsy.db')
     con.text_factory = str
     cur = con.cursor()
-    sql = 'select chr1, position1, length1, name1, chr2, position2, length2, name2, stv_type, frequency, assembled_sequence from structural_variation' 
+    fields = 'alias, type, sequence'
+    sql = 'select ' + fields + ' from ' + seqsource + ' limit 500'
+    seqtable = "variant_sequence"
+    seqsourcesql = ""
+    if (seqsource != 'all'):
+      seqsourcesql = "and type = '%s'" %(seqsource)
     if (parameter != None):
-        lowfq = parameter.split(":")[0]
-        hifq = parameter.split(":")[1]
-        sql = "select chr1, position1, length1, name1, chr2, position2, length2, name2, stv_type, frequency, assembled_sequence from structural_variation where frequency >= %s and frequency <= %s order by frequency desc" %(lowfq, hifq)
-
+      sql = "select " + fields + " from %s where alias like '%s' %s limit 500" %(seqtable, "%"+parameter+"%", seqsourcesql)
     cur.execute(sql)
+    #'select chromosome, begin, end, var_type, reference, allele_seq, xref, complete_genomics, illumina from snv_indel_shsy limit 200')
     rows = cur.fetchall()
     print "Content-type: text/html;charset=utf-8\r\n"
     pa = {}
@@ -34,7 +42,6 @@ try:
             pi.append(row[r])
         pa['aaData'].append(pi)
     print json.dumps(pa)
-
 except lite.Error, e:
     print "Error %s:" % e.args[0]
     sys.exit(1)
