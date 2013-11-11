@@ -75,7 +75,9 @@
         }
 	if (mindex == 3){
                 initSTV();
-        }
+	}else{
+		resetSTV();
+	}
         if (mindex == 4){
                 initRNASeq();
         }
@@ -90,6 +92,10 @@
 	if (mindex == 7){
 		initMetabolomics();
 	}
+	if (mindex == 8){
+	    initSequencing();
+	}
+
     }
     });
     /*$('.selector').tabs({
@@ -111,40 +117,49 @@
 </div>
 <div id="tabs">
   <ul>
-    <li><a href="#summary">Summary</a></li>
-    <li><a href="#SNP">SNP Indel</a></li>
+    <li><a href="#summary"><SPAN TITLE="Project summary and downloads">Summary</SPAN></a></li>
+    <li><a href="#SNP"><SPAN TITLE="Explore single nucleotide polymorphisms and short insertion/deletion mutations. Detail links are provided to 1000 Genomes and dbSNP">SNP Indel</SPAN></a></li>
     <li><a href="#CNV">Copy Number</a></li>
-    <li><a href="#STV">Structural Variation</a></li>
+    <li><a href="#STV"><SPAN TITLE="Displays recorded structural variations with frequency and sequence details, An upper case letter in a DNA consensus sequence indicates that the nucleotide is preserved in that position in all sequences used to make the consensus. A lower case letter is the most common nucleotide in a variable position.">Structural Variation</SPAN></a></li>
     <li><a href="#RNASeq">RNASeq</a></li>
-    <li><a href="#Geo">GEO Microarray</a></li>
+    <li><a href="#Geo"><SPAN TITLE="Contains collections of SH-SY5Y GEO experiments organized with its expressed genes">GEO Microarray</SPAN></a></li>
     <li><a href="#Protein">Proteomics</a></li>
     <li><a href="#Metabolite">Metabolomics</a></li>
+    <li><a href="#Sequencing"><SPAN TITLE="Find variant sequence on SH-SY5Y genes">Sequence</SPAN></a></li>
   </ul>
   <div id="summary">
    <div>Abstract and short project motivation: ...<br><br>
      <table><tr><td><a href="images/figure1.png" target="_blank"><img src="images/figure1.png" alt="circos" height="400" width="400"></a></td> 
-	 <td><a href="images/figure2.png" target="_blank"><img src="images/figure2.png" alt="chromosomes" height="400" width="600"></a></td></tr><tr> <td>Figure 1: Structural variation
+	 <td><a href="images/figure2.png" target="_blank"><img src="images/figure2.png" alt="chromosomes" height="400" width="600"></a></td></tr><tr> <td>Figure 1: High confidence Intrachromosomal Structural variations
    </td><td>Figure 2: Copy number gains (red) and losses (blue)</td></tr></table>
-   <br>Download results
+   <br>Download Omics results
    <br><ul>
      <li><a href="data/raw/SNP.gz">SNP (gz)</a></li>
      <li><a href="data/raw/CNV.tsv">CNV</a></li>
      <li><a href="data/raw/STV.tsv">STV</a></li>
      <li><a href="data/raw/RNASeq.gz">RNASeq (gz)</a></li>
-     <li><a href="data/raw/microarray_gse9169.gz">Microarray GSE9169 (gz)</a></li>
-     <li><a href="data/raw/microarray_shsy5y.gz">Microarray SH-SY5Y (gz)</a></li>
+     <li><a href="data/raw/microarray_gse9169.gz">Microarray GSE9169 (gz)</a>&nbsp;<a href="data/raw/microarray_shsy5y.gz">SH-SY5Y (gz)</a></li>
      <li><a href="data/raw/Protein.tsv">Protein</a></li>
      <li><a href="data/raw/Metabolomics.tsv">Metabolomics</a></li>
      <li><a href="data/raw/shsy5y.short_variants.fa.gz">Fasta (gz)</a>&nbsp;<a href="data/raw/shsy5y.short_variants.fa.fai">index</a></li>
-    </ul>
-       </div>
+   </ul>
+   <!-- Query Gene sequence: <input type="search" name="seqsearch" id="seqsearch" TITLE="Input Gene name or Refseq or ENSEMBL ids" style="display:inline;" placeholder="Name or Identifier">&nbsp;
+   <select id="seqsource" style="display:inline;">
+       <option value="homozygous">Homozygous</option>
+       <option value="heterozygous">Heterozygous</option>
+   </select>
+   <button onclick="getSequence()" style="display:inline;">&nbsp;Go</button>
+   <br><textarea style="width: 100%; height: 300px;" rows="20" cols="800" id="sequencecontainer"></textarea>
+   -->
+ </div>
   </div>
   <div id="SNP">
   </div>
   <div id="CNV">
   </div>
   <div id="STV">
-    <span id="freqspan"><a href="data/raw/STV.tsv">Download SV data</a><br>Frequency Range:</span>
+    <div id="pomoc"></div>
+    <span id="freqspan">Update Frequency Range:</span>
     <div id="slider-range"></div>
     <span id="stvdialog"></span>
   </div>
@@ -155,6 +170,8 @@
   <div id="Protein">
   </div>
   <div id="Metabolite">
+  </div>
+  <div id="Sequencing">
   </div>
 </div>
 <div id="footer1" align="right" style="background-color:lightgray">
