@@ -14,23 +14,40 @@
   <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
   <link rel="stylesheet" type="text/css" href="lib/js/bootstrap.css" media="all">
         <script type="text/javascript" src="lib/js/bootstrap.js"></script>
-      <!--  <script type="text/javascript" src="lib/js/typeahead.js"></script> -->
+        <script type="text/javascript" src="lib/js/typeahead.js"></script>
         <script type="text/javascript" src="lib/js/jquery.dataTables.js"></script>
         <script type="text/javascript" src="lib/js/highcharts.js"></script>
         <script type="text/javascript" src="lib/js/exporting.js"></script>
-        <link rel="stylesheet" href="lib/js/messi.min.css" />
+    
+	<link rel="stylesheet" href="lib/js/messi.min.css" />
         <script src="lib/js/messi.js"></script>
 
   <script src="js/interaction.js"></script>
+  <script src="js/plug.js"></script>
+  <script src="js/hg19_genes.js"></script>
   <link rel="stylesheet" href="/css/style.css" />
   <STYLE type="text/css">
-        html, body {
+    img.prev{
+	width:500px !important;
+	height:500px !important;
+    }
+    p.break
+    {
+      width:28em; 
+      /*border:1px solid #000000;*/
+      word-wrap:break-word;
+    }
+    html, body {
                 width:          99%;
                 height:         99%;
                 padding:        0;
                 margin:         0;
-                /*overflow:     hidden !important;*/
-        }
+		/*overflow:     hidden !important;*/
+	      }
+	td
+	{
+	    padding:10px;
+	}	
         .header {
         	width:100%;
 		height: 100px;
@@ -38,17 +55,23 @@
 		background-size: cover;
 		background-color: blue;
 	      }
-	      .footer1 {
+	.footer1 {
 	                  width:100%;
 		                  height: 70px;
 			                padding-top:2cm;
 			                      padding: 10px;
 			                      background-size: cover;
 			                background-color: blue;
-		                }			
+				      }
+				      .linkstyle{
+					color:#FF00;
+				      }
+  a:link {color:#FF00;}    /* unvisited link */
+
   </STYLE>
 
   <script>
+    var subjects = ['PHP', 'MySQL', 'SQL', 'PostgreSQL', 'HTML', 'CSS', 'HTML5', 'CSS3', 'JSON'];   
   $(function() {
     var tabs = $( "#tabs" ).tabs({
     	/*select: function( event, ui ) {
@@ -107,7 +130,10 @@
 
     //});   
   });
-  </script>
+  function manudialog(){
+    new Messi('In preparation, available soon', {title: 'Manuscript', autoclose:2000, titleClass:'success'});
+  }
+</script>
 </head>
 <body>
  
@@ -117,7 +143,7 @@
 </div>
 <div id="tabs">
   <ul>
-    <li><a href="#summary"><SPAN TITLE="Project summary and downloads">Summary</SPAN></a></li>
+    <li><a href="#summary"><SPAN TITLE="Project summary and downloads">Summary Downloads</SPAN></a></li>
     <li><a href="#SNP"><SPAN TITLE="Explore single nucleotide polymorphisms and short insertion/deletion mutations. Detail links are provided to 1000 Genomes and dbSNP">SNP Indel</SPAN></a></li>
     <li><a href="#CNV">Copy Number</a></li>
     <li><a href="#STV"><SPAN TITLE="Displays recorded structural variations with frequency and sequence details, An upper case letter in a DNA consensus sequence indicates that the nucleotide is preserved in that position in all sequences used to make the consensus. A lower case letter is the most common nucleotide in a variable position.">Structural Variation</SPAN></a></li>
@@ -128,11 +154,13 @@
     <li><a href="#Sequencing"><SPAN TITLE="Find variant sequence on SH-SY5Y genes">Sequence</SPAN></a></li>
   </ul>
   <div id="summary">
-   <div>Abstract and short project motivation: ...<br><br>
-     <table><tr><td><a href="images/figure1.png" target="_blank"><img src="images/figure1.png" alt="circos" height="400" width="400"></a></td> 
-	 <td><a href="images/figure2.png" target="_blank"><img src="images/figure2.png" alt="chromosomes" height="400" width="600"></a></td></tr><tr> <td>Figure 1: High confidence Intrachromosomal Structural variations
-   </td><td>Figure 2: Copy number gains (red) and losses (blue)</td></tr></table>
-   <br>Download Omics results
+   <div>The human neuroblastoma cell line, SH-SY5Y, is a commonly used cell line in studies related to neurotoxicity, oxidative stress, and neurodegenerative disease. 
+     We have used a systems genomics approach to characterize the SH-SY5Y cell line using whole-genome sequencing to determine the genetic background of the cell line and use transcriptomics, proteomics and metabolomics data together with a network analysis approach to evaluate the suitability of the SH-SY5Y cell line as a model system to study Parkinson's disease. <a href="#" onclick="manudialog();"><font color="blue">Manuscript</font></a><br><br>
+     <table><tr><td><a href="images/figure1.png" target="_blank"><img class='prev' src="images/figure1_p.png" alt="circos"></a></td> 
+	 <td><a href="images/figure2.png" target="_blank"><img class='prev' src="images/figure2_p.png" alt="chromosomes"></a></td></tr><tr> <td>Figure 1: Circos plot of the SH-SY5Y genome. Tracks represent (from outside to inside) karyotype for each chromosome, copy number variation (red > 2, green = 2, black < 2), density of small variants (bin size = 1Mb), homozygous small variant percentage (bin size = 1 Mb). Arcs represent chromosomal breakpoints (red = rare breakpoints not found in Complete Genomics Baseline dataset).
+   </td><td>Figure 2: Copy number variation events detected by CG (left half of chromosomes) and microarray analysis(right half).
+Regions are highlighted for copy number gain (red) and loss (blue). The major events partial trisomy of chromosome 1 and 2, complete trisomy of chromosome 7, gain in 17q and loss in 22q were confirmed.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                                                                                                                                                  </td></tr></table>
+   <br><font color="blue">Download Omics results</font>
    <br><ul>
      <li><a href="data/raw/SNP.gz">SNP (gz)</a></li>
      <li><a href="data/raw/CNV.tsv">CNV</a></li>
