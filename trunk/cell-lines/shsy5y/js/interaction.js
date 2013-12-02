@@ -29,7 +29,7 @@ function searchSnp(){
 					"oLanguage": { "sSearch": "Filter Results" }, 
                                         "aoColumns": [
                                         { "sTitle": "Chromosome" },{ "sTitle": "Begin" },{ "sTitle": "End" },{ "sTitle": "Name" },
-                                        { "sTitle": "Var_Type" },{ "sTitle": "Reference" }, { "sTitle": "Allele_Seq" },{ "sTitle": "Complete_Genomics" },{ "sTitle": "Illumina" },{ "sTitle": "XRef" }]
+                                        { "sTitle": "Var_Type" },{ "sTitle": "Reference" }, { "sTitle": "Allele_Seq" },{ "sTitle": "<SPAN TITLE='Allele calls from CompleteGenomics platform 00 means both alleles equal reference, where 11 means a homozygous call, 01/10 are heterozygous. N implies insufficient coverage, with possible NN/0N/1N/N0/N1.'>Complete_Genomics</SPAN>"},{ "sTitle": "<SPAN TITLE='Allele calls from Illumina platform 00 means both alleles equal reference, where 11 means a homozygous call, 01/10 are heterozygous. N implies insufficient coverage, with possible NN/0N/1N/N0/N1.'>Illumina</SPAN>" },{ "sTitle": "XRef links" }]
                                         });
                         },
                         error: function(){
@@ -37,11 +37,21 @@ function searchSnp(){
                 });
 }
 
+function snp_selection(){
+    var column = $('#columns').val();
+    var autocomplete = $('#search_input').typeahead();
+    if (column == "name"){
+	autocomplete.data('typeahead').source = hg19genes;
+    }else{
+	autocomplete.data('typeahead').source = []; 
+    }
+}
+
 function initSNP(){
       var rawdata = "<a href='data/raw/SNP.gz'>download SNP data (gzip)</a><br>";
         // chromosome, begin, end, var_type, reference, allele_seq, complete_genomics, illumina, xref $("#SNP").append(rawdata + "<br>Filter on SNPs and Indels");
-	var searchin = '&nbsp;<input type="search" style="display:block;width:250px;" size="200" name="search_input" id="search_input" TITLE="By default, Search does partial match on selected snp columns except for name, where it will match on exact gene name. The advanced column function allows for custom selects, essentially the field becomes a free where clause meaning that syntax must be correct, each of the column header below exactly match a column in the db, such as xref = xref. Multiple columns and using AND OR clause are ok. Text(String) fields require single quotes and LIKE requires %"  placeholder="Enter value">';
-        var columns = 'Column: <select id = "columns" name="columns" style="display:inline"><option value="name">Gene name</option><option value="chromosome">Chr</option><option value="begin">Begin</option><option value="end">End</option><option value="var_type">VarType</option><option value="reference">Reference</option><option value="allele_seq">AlleleSeq</option><option value="complete_genomics">CompleteGenomics</option><option value="illumina">Illumina</option><option value="xref">XRef</option><option value = "advanced">Advanced</option></select>';
+	var searchin = '&nbsp;<input type="search" style="display:block;width:250px;" size="200" name="search_input" id="search_input" data-provide="typeahead" data-items="10" TITLE="By default, Search does partial match on selected snp columns except for name, where it will match on exact gene name. The advanced column function allows for custom selects, essentially the field becomes a free where clause meaning that syntax must be correct, each of the column header below exactly match a column in the db, such as xref = xref. Multiple columns and using AND OR clause are ok. Text(String) fields require single quotes and LIKE requires %"  placeholder="Enter value">';
+        var columns = 'Column: <select id = "columns" name="columns" onchange="snp_selection()" style="display:inline"><option value="name">Gene name</option><option value="chromosome">Chr</option><option value="begin">Begin</option><option value="end">End</option><option value="var_type">VarType</option><option value="reference">Reference</option><option value="allele_seq">AlleleSeq</option><option value="complete_genomics">CompleteGenomics</option><option value="illumina">Illumina</option><option value="xref">XRef</option><option value = "advanced">Advanced</option></select>';
 	var button = '&nbsp;<button id="searchSnp" value="Filter" onClick="searchSnp()">Search</button>&nbsp;<span id="snp_dialog"></span>'; 
 	$('#SNP').html( rawdata + '<br>' + columns + searchin + button + '<br><table cellpadding="0" cellspacing="0" border="0" class="display" id="snptable"></table>' );
         $( "#snp_dialog" ).html("<img src='images/progress.gif' />");
@@ -57,6 +67,7 @@ function initSNP(){
                                 var _data = jo["aaData"];
 				$("#search_input").css("display","inline");    
 				$("#snp_dialog").html(_data.length + " rows returned");
+				$('#search_input').typeahead({source: hg19genes}); 
                                 $('#snptable').dataTable( {
                                         "bProcessing": true,
                                         "bDestroy": true,
@@ -64,8 +75,8 @@ function initSNP(){
 					"oLanguage": { "sSearch": "Filter Results" },    
                                         "aaData": _data,
                                         "aoColumns": [
-                                        { "sTitle": "Chromosome" },{ "sTitle": "<SPAN TITLE='Click on the begin position to view region info and variants in 1000 Genome Project'><a>Begin</a></SPAN>" },{ "sTitle": "End" },{ "sTitle": "Name" },
-                                        { "sTitle": "VarType" },{ "sTitle": "Reference" }, { "sTitle": "Allele_Seq" },{ "sTitle": "Complete_Genomics" },{ "sTitle": "Illumina" },{ "sTitle": "XRef" }]
+                                        { "sTitle": "Chromosome" },{ "sTitle": "Begin" },{ "sTitle": "End" },{ "sTitle": "Name" },
+                                        { "sTitle": "VarType" },{ "sTitle": "Reference" }, { "sTitle": "Allele_Seq" },{ "sTitle": "<SPAN TITLE='Allele calls from CompleteGenomics platform 00 means both alleles equal reference, where 11 means a homozygous call, 01/10 are heterozygous. N implies insufficient coverage, with possible NN/0N/1N/N0/N1.'>Complete_Genomics</SPAN>"},{ "sTitle": "<SPAN TITLE='Allele calls from Illumina platform 00 means both alleles equal reference, where 11 means a homozygous call, 01/10 are heterozygous. N implies insufficient coverage, with possible NN/0N/1N/N0/N1.'>Illumina</SPAN>" },{ "sTitle": "XRef links" }]
                                         });
                         },
                         error: function(){
@@ -119,8 +130,8 @@ function freqchange(){
 var stvTable;
 function initSTV(){
 	var rawdata = "<a href='data/raw/STV.tsv'>Download SV data</a><br><a href='https://yanex.googlecode.com/files/pomo_userguide.pdf'><SPAN TITLE='Link contains user guide to POMO interactive circular omics plots'>POMO visualizations</SPAN></a>";//Frequency:<input type='range' id='freqrange' name='freqrabge' min='0' max='1' step='.01' value='.5' onchange='freqchange();'>";
-        var klinks = "<a href='http://pomo.cs.tut.fi/?fileurl=http://systemsbiology.uni.lu/shsy5y/data/shsy5y_pomo.tsv&organism=human' target='_blank'><img src='images/shsy_pomo.png' alt='pomo rings' height='400' width='400'></a><br>";
-	var klinks2 = "<a href='http://pomo.cs.tut.fi/?fileurl=http://systemsbiology.uni.lu/shsy5y/data/shsy5y_pomo_freq.tsv&organism=human' target='_blank'><img src='images/shsy_pomo_conf.png' alt='pomo rings' height='400' width='400'></a><br>";
+        var klinks = "<a href='http://pomo.cs.tut.fi/?fileurl=http://systemsbiology.uni.lu/shsy5y/data/shsy5y_pomo.tsv&organism=human' target='_blank'><img src='images/shsy_pomo_compressed.png' alt='pomo rings' height='400' width='400'></a><br>";
+	var klinks2 = "<a href='http://pomo.cs.tut.fi/?fileurl=http://systemsbiology.uni.lu/shsy5y/data/shsy5y_pomo_freq.tsv&organism=human' target='_blank'><img src='images/shsy_pomo_conf_compressed.png' alt='pomo rings' height='400' width='400'></a><br>";
 
 	$( "#slider-range" ).slider({
       range: true,
@@ -149,14 +160,14 @@ function initSTV(){
                                         "iDisplayLength": 25,
                                         "aaData": _stvdata,
                                         "aoColumns": [
-                                        { "sTitle": "LeftChr" },
-                                        { "sTitle": "Position" },
-                                        { "sTitle": "Length" },{ "sTitle": "LeftGene" },
-                                        { "sTitle": "RightChr" },
-                                        { "sTitle": "Position" },
-                                        { "sTitle": "Length" },{ "sTitle": "RightGene" },
+                                        { "sTitle": "Chr" },
+                                        { "sTitle": "Position:Length" },
+                                        { "sTitle": "LeftGene" },
+                                        { "sTitle": "Chr" },
+                                        { "sTitle": "Position:Length" },
+                                        { "sTitle": "RightGene" },
                                         { "sTitle": "Type" },
-                                        { "sTitle": "FrequencyInBaseline" },
+                                        { "sTitle": "<span TITLE='Frequency in Baseline parameter is calculated as (number of baseline genomes containing corresponding junctions) / (total number of baseline genomes).'>Frequency</span>" },
                                         { "sTitle": "AssembledSequence" }
                                         ]
                                 });
@@ -187,14 +198,14 @@ function initSTV(){
                                         "iDisplayLength": 25,
                                         "aaData": _stvdata,
                                         "aoColumns": [
-                                        { "sTitle": "LeftChr" },
-					{ "sTitle": "Position" },
-                                        { "sTitle": "Length" },{ "sTitle": "LeftGene" },
-					{ "sTitle": "RightChr" },
-                                        { "sTitle": "Position" },
-                                        { "sTitle": "Length" },{ "sTitle": "RightGene" },
+                                        { "sTitle": "Chr" },
+					{ "sTitle": "Position:Length" },
+                                        { "sTitle": "Gene" },
+					{ "sTitle": "Chr" },
+                                        { "sTitle": "Position:Length" },
+                                        { "sTitle": "Gene" },
 					{ "sTitle": "Type" },
-					{ "sTitle": "FrequencyInBaseline" },
+					{ "sTitle": "<span TITLE='Frequency in Baseline parameter is calculated as (number of baseline genomes containing corresponding junctions) / (total number of baseline genomes).'>Frequency</span>" },					
                                         { "sTitle": "AssembledSequence" }
                                         ]
 				});
@@ -233,7 +244,7 @@ function searchRNASeq(){
                                         "aaData": _data,
                                         "aoColumns": [
                                         { "sTitle": "Id" },{ "sTitle": "Name" },
-                                        { "sTitle": "Locus" },{ "sTitle": "<SPAN TITLE='Cufflinks measures transcript abundances in Fragments Per Kilobase of exon per Million fragments mapped'>FPKM</SPAN>" }, { "sTitle": "FPKM_Conf_Lo" },{ "sTitle": "FPKM_Conf_Hi" },{ "sTitle": "TSS" }]
+                                        { "sTitle": "Locus" },{ "sTitle": "<SPAN TITLE='Cufflinks measures transcript abundances in Fragments Per Kilobase of exon per Million fragments mapped'>FPKM</SPAN>" }, { "sTitle": "FPKM_Lo" },{ "sTitle": "FPKM_Hi" },{ "sTitle": "TSS" }]
                                         });
 				rnatable.fnSort( [ [3,'desc']] );
 			},
@@ -242,14 +253,24 @@ function searchRNASeq(){
 			}
                 });
 }
+function rna_selection(){
+    var column = $('#rnacolumns').val();
+    var autocomplete = $('#rnasearch_input').typeahead();
+    if (column == "name"){
+        autocomplete.data('typeahead').source = hg19genes;
+    }else{
+        autocomplete.data('typeahead').source = [];
+    }
+}
 
 var rnatable;
 function initRNASeq(){
         var rawdata = "<a href='data/raw/RNASeq.gz'>download RNASeq data (gzip)</a><br>";
-	var searchin = '&nbsp;<input type="search" style="display:block;width:250px;" size="200" name="search_input" id="rnasearch_input" TITLE="By default, Search does partial match on selected columns. The advanced column function allows for custom selects, essentially the field becomes a free where clause meaning that syntax must be correct, each of the column header below match a column in the db, such as FPKM = FPKM. Multiple columns and using AND OR clause are ok. Text(String) fields require single \' quotes and LIKE requires % numeric fields can take >, < values without quotes"  placeholder="Enter value">';
-	var columns = 'Column: <select id = "rnacolumns" name="rnacolumns" style="display:inline"><option value="name">Name</option><option value="id">Id</option><option value="locus">Locus</option><option value="fpkm">FPKM</option><option value="fpkm_conf_lo">FPKM_Conf_Lo</option><option value="fpkm_conf_high">FPKM_Conf_Hi</option><option value="tss">TSS</option><option value = "advanced">Advanced</option></select>';
+	var searchin = '&nbsp;<input type="search" style="display:block;width:250px;" size="200" name="rnasearch_input" id="rnasearch_input" data-provide="typeahead" data-items="10" TITLE="By default, Search does partial match on selected columns. The advanced column function allows for custom selects, essentially the field becomes a free where clause meaning that syntax must be correct, each of the column header below match a column in the db, such as FPKM = FPKM. Multiple columns and using AND OR clause are ok. Text(String) fields require single \' quotes and LIKE requires % numeric fields can take >, < values without quotes"  placeholder="Enter value">';
+	var columns = 'Column: <select id = "rnacolumns" name="rnacolumns" onchange="rna_selection()" style="display:inline"><option value="name">Name</option><option value="id">Id</option><option value="locus">Locus</option><option value="fpkm">FPKM</option><option value="fpkm_conf_lo">FPKM_Conf_Lo</option><option value="fpkm_conf_high">FPKM_Conf_Hi</option><option value="tss">TSS</option><option value = "advanced">Advanced</option> </select>';
         var button = '&nbsp;<button id="searchRNA" value="Filter" onClick="searchRNASeq()">Search</button>&nbsp;<span id="rna_dialog"></span>';
-        $('#RNASeq').html( rawdata + '<br>' + columns + searchin + button + '<br><table cellpadding="0" cellspacing="0" border="0" class="display" id="rnaseqtable"></table>' );
+        $('#RNASeq').html( rawdata + '<br>' + columns + searchin + button + '<br><table cellpadding="0" cellspacing="0" border="0" class="display" id="rnaseqtable"> <thead><tr><th width="10%">Id</th><th width="10%">Name</th><th width="10%">Locus</th><th width="10%">FPKM</th><th width="10%">FPKM_Lo</th><th width="10%">FPKM_Hi</th><th width="40%">TSS</th></tr><tbody></tbody></table>' );
+
 	$( "#rna_dialog" ).html("<img src='images/progress.gif' />");
 	  $.ajax({
                 type: "POST",
@@ -260,16 +281,23 @@ function initRNASeq(){
                                 var jo  = $.parseJSON(json);
                                 var _data = jo["aaData"];
                                 $("#rnasearch_input").css("display","inline");
-                                $("#rna_dialog").html(_data.length + " rows returned");
+				$('#rnasearch_input').typeahead({source: hg19genes});
+	    			$("#rna_dialog").html(_data.length + " rows returned");
                                 rnatable = $('#rnaseqtable').dataTable( {
                                         "bProcessing": true,
                                         "bDestroy": true,
                                         "iDisplayLength": 25,
                                         "oLanguage": { "sSearch": "Filter Results" },
-                                        "aaData": _data,
+                                        "aaData": _data					/*,
+					"bAutoWidth": false,
                                         "aoColumns": [
-                                        { "sTitle": "Id" },{ "sTitle": "Name" },
-                                        { "sTitle": "Locus" },{ "sTitle": "<SPAN TITLE='Cufflinks measures transcript abundances in Fragments Per Kilobase of exon per Million fragments mapped'>FPKM</SPAN>"}, { "sTitle": "FPKM_Conf_Lo" },{ "sTitle": "FPKM_Conf_Hi" },{ "sTitle": "TSS" }]
+                                        { "sTitle": "Id","sWidth": "10%"},
+					{ "sTitle": "Name","sWidth": "10%" },
+                                        { "sTitle": "Locus","sWidth": "10%" },
+					{ "sTitle": "<SPAN TITLE='Cufflinks measures transcript abundances in Fragments Per Kilobase of exon per Million fragments mapped'>FPKM</SPAN>","sWidth": "10%"}, 
+					{ "sTitle": "FPKM_Conf_Lo","sWidth": "10%" },
+					{ "sTitle": "FPKM_Conf_Hi","sWidth": "10%" },
+					{ "sTitle": "TSS","sWidth": "40%"}]*/
                                         });
                         },
                         error: function(){
@@ -301,7 +329,6 @@ function searchMicroarray(){
                                 if ($.parseJSON(json) == null){
                                         new Messi('Error on data retrieval, please contact help', {title: 'Server error'});}
                                 var jo  = $.parseJSON(json);
-				//$("#geosearch_input").css("display","inline");
 				var _data = jo["aaData"];
                                 $("#geo_dialog").html(_data.length + " rows returned");
                                 geotable = $('#geotable').dataTable( {
@@ -321,7 +348,7 @@ function searchMicroarray(){
 
 function initMicroarray(){
     var rawdata = "<a href='data/raw/microarray_gse9169.gz'>download Microarray_GSE9169 </a>&nbsp;<a href='data/raw/microarray_shsy5y.gz'>SH-SY5Y (gzip)</a><br>";
-    var searchin = '&nbsp;<input type="search" style="display:block;width:250px;" size="200" name="geosearch_input" id="geosearch_input" TITLE="By default, Search does partial match on selected columns. Using advanced, multiple columns and using AND OR clause are ok. Text(String) fields require single \' quotes and LIKE requires % numeric fields can take >, < values without quotes"  placeholder="Enter value">';
+    var searchin = '&nbsp;<input type="search" style="display:block;width:250px;" size="200" name="geosearch_input" id="geosearch_input" data-provide="typeahead" data-items="10" TITLE="By default, Search does partial match on selected columns. Using advanced, multiple columns and using AND OR clause are ok. Text(String) fields require single \' quotes and LIKE requires % numeric fields can take >, < values without quotes"  placeholder="Enter value">';
         var columns = 'Column: <select id = "geocolumn" style="display:inline"><option value="name">Name</option><option value="anno">Annotation</option><option value="alias">Alias</option><option value = "advanced">Advanced</option></select>';
         var button = '&nbsp;<button id="searchGeo" value="Filter" onClick="searchMicroarray()">Search</button>&nbsp;<span id="geo_dialog"></span>';
         $('#Microarray').html( rawdata + '<br>Find other expressed genes collected from published GEO Experiments related to SH-SY5Y. Experiment names are detailed links.<br>' + columns + searchin + button + '<br><table cellpadding="0" cellspacing="0" border="0" class="display" id="geotable"></table>' );
@@ -335,7 +362,8 @@ function initMicroarray(){
                                 var jo  = $.parseJSON(json);
                                 var _data = jo["aaData"];
                                 $("#geosearch_input").css("display","inline");
-                                $("#geo_dialog").html(_data.length + " rows returned");
+                                $('#geosearch_input').typeahead({source: hg19genes});
+			       	$("#geo_dialog").html(_data.length + " rows returned");
                                 geotable = $('#geotable').dataTable( {
                                         "bProcessing": true,
                                         "bDestroy": true,
@@ -412,16 +440,17 @@ function initMetabolomics(){
                 });
 }
 
+
 function initSequencing(){
 	var rawlink = '<a href="data/raw/shsy5y.short_variants.fa.gz">Download Fasta (gz)</a>&nbsp;<a href="data/raw/shsy5y.short_variants.fa.fai">index</a><br>';
-	$('#Sequencing').html(rawlink + 'Get Gene sequence: <input type="search" name="seqsearch" id="seqsearch" TITLE="Input Gene name or Refseq or ENSEMBL ids" style="display:inline;" placeholder="Name or Identifier">&nbsp; Zygosity: <select id="seqsource" style="display:inline;"><option value="all">All</option><option value="homozygous">Homozygous</option><option value="heterozygous">Heterozygous</option></select><button onclick="getSequence()" style="display:inline;">&nbsp;Go</button><br><span id="geneseq_dialog"></span><textarea style="width: 100%; height: 600px;" rows="40" cols="800" id="sequencecontainer"></textarea>');
- 
+	$('#Sequencing').html(rawlink + 'Get Gene sequence: <input type="search" name="seqsearch" id="seqsearch" data-provide="typeahead" data-items="10"  TITLE="Input Gene name or Refseq or ENSEMBL ids" style="display:inline;" placeholder="Name or Identifier">&nbsp; Zygosity: <select id="seqsource" style="display:inline;"><option value="all">All</option><option value="homozygous">Homozygous</option><option value="heterozygous">Heterozygous</option></select><button onclick="getSequence()" style="display:inline;">&nbsp;Go</button><br><span id="geneseq_dialog"></span><textarea style="width: 100%; height: 600px;" rows="40" cols="800" id="sequencecontainer"></textarea>');
+	$('#seqsearch').typeahead({source: hg19genes}); 
 }
 
 function getSequence(){
     var genein = $('#seqsearch').val();
-    if (genein.length < 3){
-    	new Messi('Please enter a valid gene name or string longer than 4 characters...', {title: 'Validation error'});
+    if (genein.length < 2){
+    	new Messi('Please enter a valid gene name or partial string of at least 2 characters...', {title: 'Validation error'});
     	return;
     }
     $( "#geneseq_dialog" ).html("<img src='images/progress.gif' />");
@@ -437,6 +466,9 @@ function getSequence(){
                                 var jo  = $.parseJSON(json);
                                 var _data = jo["aaData"];
                                 $("#geneseq_dialog").html(_data.length + " results found.");
+				if (_data.length == 0){
+				    $("#geneseq_dialog").html("For " + genein.toUpperCase() + ", SH-SY5Y cellline did not find sequence differences with reference");
+				}
 				var _out = "";
 				for (var i = 0; i < _data.length; i++){
 				    _out = _out + _data[i][0] + " Zygosity:" + _data[i][1] + "&#13;&#10;" + _data[i][2] + "&#13;&#10;&#13;&#10;";   
